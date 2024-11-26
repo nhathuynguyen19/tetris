@@ -1,6 +1,6 @@
 # Tetris
 ---
-A Tetris Clone made using [py game](https://www.bing.com/ck/a?!&&p=74e1266fc3ffab59e47fe701f66be7a0949ca5812d3cd7e68642a743535fddedJmltdHM9MTczMjQ5MjgwMA&ptn=3&ver=2&hsh=4&fclid=3847e616-8fde-65b6-3f9c-f3018ecc6493&psq=pygame&u=a1aHR0cHM6Ly93d3cucHlnYW1lLm9yZy9kb2NzLw&ntb=1)
+A Tetris Clone made using [pygame](https://www.bing.com/ck/a?!&&p=74e1266fc3ffab59e47fe701f66be7a0949ca5812d3cd7e68642a743535fddedJmltdHM9MTczMjQ5MjgwMA&ptn=3&ver=2&hsh=4&fclid=3847e616-8fde-65b6-3f9c-f3018ecc6493&psq=pygame&u=a1aHR0cHM6Ly93d3cucHlnYW1lLm9yZy9kb2NzLw&ntb=1)
 
 ## Setup (in Windows):
 ---
