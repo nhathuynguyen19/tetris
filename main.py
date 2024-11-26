@@ -82,8 +82,8 @@ def draw_tetrimino_game_table(tetrimino):
         for x, cell in enumerate(row):
             if cell == 1:
                 color_down = down_color(tetrimino.color)
-                pygame.draw.rect(screen, tetrimino.color, ((tetrimino.x + x) * BLOCK_SIZE, (tetrimino.y + y) * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE))
-                pygame.draw.rect(screen, color_down, ((tetrimino.x + x) * BLOCK_SIZE, (tetrimino.y + y) * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE), 1)
+                pygame.draw.rect(screen, tetrimino.color, ((COLUMNS + x + 3 - len(row)/2) * BLOCK_SIZE, ((3 + y - len(tetrimino.shape)/2) * BLOCK_SIZE), BLOCK_SIZE, BLOCK_SIZE))
+                pygame.draw.rect(screen, color_down, ((COLUMNS + x + 3 - len(row)/2) * BLOCK_SIZE, ((3 + y - len(tetrimino.shape)/2) * BLOCK_SIZE), BLOCK_SIZE, BLOCK_SIZE), 1)
 
 def place_tetrimino(tetrimino):
     for y, row in enumerate(tetrimino.shape):
@@ -227,9 +227,9 @@ while running:
         position_after_tetrimino = random.choice(tetrimino_bag)
     
     table_game = pygame.Rect(COLUMNS * BLOCK_SIZE, 0, 6 * BLOCK_SIZE, ROWS * BLOCK_SIZE)
-    screen.fill(BLACK, table_game)
+    screen.fill((20, 20, 20), table_game)
     pygame.draw.rect(screen, WHITE, (COLUMNS * BLOCK_SIZE, 0, 6 * BLOCK_SIZE, ROWS * BLOCK_SIZE), 2)
-    
+        
     if begin_game:
         tetrimino_display_table_after = temp_after_tetrimino
     else:
@@ -240,10 +240,10 @@ while running:
     for i in range(random_rotate):
         tetrimino_display_table_after.rotate()
     draw_tetrimino_game_table(tetrimino_display_table_after)
-    screen.blit(text_score, (COLUMNS * BLOCK_SIZE + 20, 6 * BLOCK_SIZE))
-    screen.blit(text_level, (COLUMNS * BLOCK_SIZE + 20, 7 * BLOCK_SIZE))
-    screen.blit(text_best_score, (COLUMNS * BLOCK_SIZE + 20, 9 * BLOCK_SIZE))
-    screen.blit(text_best_score_number, (COLUMNS * BLOCK_SIZE + 20, 10 * BLOCK_SIZE))
+    screen.blit(text_score, (COLUMNS * BLOCK_SIZE + 20, 7 * BLOCK_SIZE))
+    screen.blit(text_level, (COLUMNS * BLOCK_SIZE + 20, 8 * BLOCK_SIZE))
+    screen.blit(text_best_score, (COLUMNS * BLOCK_SIZE + 20, 10 * BLOCK_SIZE))
+    screen.blit(text_best_score_number, (COLUMNS * BLOCK_SIZE + 20, 11 * BLOCK_SIZE))
     # print(position_after_tetrimino + 1)
     
     # each frame
