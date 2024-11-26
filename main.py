@@ -1,59 +1,17 @@
-import pygame, random
-import os
+import pygame, random, os
+from modules import Tetrimino
+from config.constants import *
 
 pygame.init()
 
+# path
 font_home_video = os.path.join(os.getcwd(), 'assets', 'fonts', 'HomeVideo-BLG6G.ttf')
-font1 = pygame.font.Font(font_home_video, 12)
-
 font_home_video_bold = os.path.join(os.getcwd(), 'assets', 'fonts', 'HomeVideoBold-R90Dv.ttf')
+high_score_path = os.path.join(os.getcwd(), 'assets', 'data', 'high_score.txt')
+
+# font
+font1 = pygame.font.Font(font_home_video, 12)
 font2 = pygame.font.Font(font_home_video_bold, 30)
-
-GAME_WIDTH = 200
-GAME_HEIGHT = 400
-BLOCK_SIZE = 20
-COLUMNS = GAME_WIDTH // BLOCK_SIZE
-ROWS = GAME_HEIGHT // BLOCK_SIZE
-
-LIGHT_BLUE = (1, 237, 250)  
-YELLOW = (254, 251, 52)   
-PURPLE = (120, 37, 111)      
-GREEN = (83, 218, 63)        
-RED = (253, 63, 89)          
-BLUE = (72, 93, 197)          
-ORANGE = (254, 72, 25)  
-WHITE = (255, 255, 255)   
-BLACK = (0, 0, 0)
-GRAY = (192, 192, 192)
-
-COLORS = [
-    LIGHT_BLUE, YELLOW, PURPLE, GREEN, RED, BLUE, ORANGE
-] 
-
-SHAPES = [
-    [[1, 1, 1, 1]],
-    [[1, 1], [1, 1]],
-    [[1, 1, 1], [0, 1, 0]],
-    [[0, 1 ,1], [1, 1, 0]],
-    [[1, 1, 0], [0, 1, 1]],
-    [[1, 0], [1, 0], [1, 1]],
-    [[0, 1], [0, 1], [1, 1]]
-]
-
-class Tetrimino():
-    def __init__(self, shape, color):
-        self.shape = shape
-        self.color = color
-        self.x = (COLUMNS // 2) - (len(self.shape[0]) // 2)
-        self.y = 0
-
-    def set_y(self, y):
-        self.y = y
-        
-    def rotate(self):
-        transposed = list(zip(*self.shape))
-        self.shape = [list(row)[::-1] for row in transposed]
-        
 
 def draw_grid():
     temp = 0
@@ -94,13 +52,11 @@ def down_color(color):
         if r > 0 and down_index > 0:
             r -= 1
             down_index -= 1
-    
     down_index = temp
     for i in range(g):
         if g > 0 and down_index > 0:
             g -= 1
             down_index -= 1
-
     down_index = temp
     for i in range(r):
         if b > 0 and down_index > 0:
@@ -115,7 +71,6 @@ def draw_tetrimino(tetrimino):
                 color_down = down_color(tetrimino.color)
                 pygame.draw.rect(screen, tetrimino.color, ((tetrimino.x + x) * BLOCK_SIZE, (tetrimino.y + y) * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE))
                 pygame.draw.rect(screen, color_down, ((tetrimino.x + x) * BLOCK_SIZE, (tetrimino.y + y) * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE), 1)
-
 
 def draw_tetrimino_game_table(tetrimino):
     for y, row in enumerate(tetrimino.shape):
@@ -178,11 +133,10 @@ game_over = False
 begin_game = True
 high_score = 0
 
-high_score_path = os.path.join(os.getcwd(), 'assets', 'data', 'high_score.txt')
+# score file data
 if not os.path.exists(high_score_path):
     with open(high_score_path, 'w') as file:
         file.write("0")
-        
 with open(high_score_path, 'r') as file:
     high_score = int(file.read())  
 
@@ -284,9 +238,10 @@ while running:
     screen.blit(text_high_score_number, (COLUMNS * BLOCK_SIZE + 20, 10 * BLOCK_SIZE))
     # print(position_after_tetrimino + 1)
     
-    
+    # each frame
     if game_time % (22 - level_game*2) == 0:
         
+        # update high score
         if score > high_score:
             high_score = score
             with open(high_score_path, "w") as file:
@@ -294,50 +249,52 @@ while running:
         
         if not game_over:
             tetrimino.y += 1
-        
-        if check_collision(tetrimino) and not game_over:
-            tetrimino.y -= 1
-            
-            if is_place_tetrimino:
-                place_tetrimino(tetrimino)
-            is_place_tetrimino = True
-            
-            if begin_game:
-                tetrimino = temp_after_tetrimino
-                begin_game = False
-            else:
-                tetrimino = after_tetrimino
+            if check_collision(tetrimino) and not game_over:
+                tetrimino.y -= 1
                 
-            if not begin_game:
-                position_after_tetrimino = random.choice(tetrimino_bag)
+                # update grid
+                if is_place_tetrimino:
+                    place_tetrimino(tetrimino)
+                    delete_lines()
+                    
+                # update grid condition
+                is_place_tetrimino = True
                 
-            after_tetrimino = Tetrimino(SHAPES[position_after_tetrimino], COLORS[position_after_tetrimino])
-            random_rotate = random.choice([0, 1, 2, 3])
-            for i in range(random_rotate):
-                after_tetrimino.rotate()
-            after_tetrimino.set_y(default_y(after_tetrimino))
+                # current tetrimino
+                if begin_game:
+                    tetrimino = temp_after_tetrimino
+                    begin_game = False
+                else:
+                    tetrimino = after_tetrimino
+                    
+                # after tetrimino
+                if not begin_game:
+                    position_after_tetrimino = random.choice(tetrimino_bag)
+                after_tetrimino = Tetrimino(SHAPES[position_after_tetrimino], COLORS[position_after_tetrimino])
+                random_rotate = random.choice([0, 1, 2, 3])
+                for i in range(random_rotate):
+                    after_tetrimino.rotate()
+                after_tetrimino.set_y(default_y(after_tetrimino))
                 
-            if top_grid >= ROWS:
-                game_over = True
-                is_place_tetrimino = False
-    # cout position_after_tetrimino
-    # print(position_after_tetrimino + 1)
+                # check game over
+                if top_grid >= ROWS:
+                    game_over = True
+                    is_place_tetrimino = False
 
-    # print(f"top: {top_grid}")
-    delete_lines()
-    # print(tetrimino.y + len(tetrimino.shape))
-    
+    #draw game scene
     top_grid = draw_grid()
-    
     if not game_over:
         draw_tetrimino(tetrimino)
     
+    # after overgame
     if game_over:
         game_over_text = font2.render("Game Over", True, WHITE)
         screen.blit(game_over_text, (BLOCK_SIZE * COLUMNS // 2 - game_over_text.get_width() // 2, BLOCK_SIZE * ROWS // 2 - game_over_text.get_height() // 2))
     
+    # end frame
     pygame.display.flip()
     pygame.draw.rect(screen, BLACK, (0, 0, COLUMNS * BLOCK_SIZE, ROWS * BLOCK_SIZE))
     game_time += 1
     clock.tick(60)
+    
 pygame.quit()
