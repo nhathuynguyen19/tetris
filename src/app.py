@@ -1,8 +1,13 @@
 import pygame, random
+import os
 
 pygame.init()
-font1 = pygame.font.Font("HomeVideo-BLG6G.ttf", 12)
-font2 = pygame.font.Font("HomeVideoBold-R90Dv.ttf", 30)
+
+font_home_video = os.path.join(os.getcwd(), 'assets', 'fonts', 'HomeVideo-BLG6G.ttf')
+font1 = pygame.font.Font(font_home_video, 12)
+
+font_home_video_bold = os.path.join(os.getcwd(), 'assets', 'fonts', 'HomeVideoBold-R90Dv.ttf')
+font2 = pygame.font.Font(font_home_video_bold, 30)
 GAME_WIDTH = 200
 GAME_HEIGHT = 400
 BLOCK_SIZE = 20
@@ -18,6 +23,7 @@ BLUE = (72, 93, 197)
 ORANGE = (254, 72, 25)  
 WHITE = (255, 255, 255)   
 BLACK = (0, 0, 0)
+GRAY = (192, 192, 192)
 
 COLORS = [
     LIGHT_BLUE,
@@ -150,7 +156,8 @@ def place_tetrimino(tetrimino):
     for y, row in enumerate(tetrimino.shape):
         for x, cell in enumerate(row):
             if cell == 1:
-                grid[tetrimino.y + y][tetrimino.x + x] = tetrimino.color
+                if tetrimino.y + y >= 0 and tetrimino.y + y <= ROWS and tetrimino.x + x >= 0 and tetrimino.x + x <= COLUMNS:
+                    grid[tetrimino.y + y][tetrimino.x + x] = tetrimino.color
                 
 def check_collision(tetrimino):
     for y, row in enumerate(tetrimino.shape):
@@ -195,6 +202,7 @@ table_draw = True
 get_after_tetrimino = False
 is_place_tetrimino = False
 game_over = False
+begin_game = True
 
 while running:
     for event in pygame.event.get():
@@ -268,10 +276,19 @@ while running:
         
     # print(tetrimino_bag)
     
+    if begin_game:
+        temp_after_tetrimino = after_tetrimino
+        position_after_tetrimino = random.choice(tetrimino_bag)
+    
     table_game = pygame.Rect(COLUMNS * BLOCK_SIZE, 0, 6 * BLOCK_SIZE, ROWS * BLOCK_SIZE)
     screen.fill(BLACK, table_game)
     pygame.draw.rect(screen, WHITE, (COLUMNS * BLOCK_SIZE, 0, 6 * BLOCK_SIZE, ROWS * BLOCK_SIZE), 2)
-    tetrimino_display_table_after = Tetrimino(SHAPES[position_after_tetrimino], COLORS[position_after_tetrimino])
+    
+    if begin_game:
+        tetrimino_display_table_after = temp_after_tetrimino
+    else:
+        tetrimino_display_table_after = Tetrimino(SHAPES[position_after_tetrimino], COLORS[position_after_tetrimino])
+        
     tetrimino_display_table_after.x = 11
     tetrimino_display_table_after.y = 1
     for i in range(random_rotate):
@@ -287,20 +304,26 @@ while running:
             tetrimino.y += 1
         
         if check_collision(tetrimino) and not game_over:
-            if tetrimino.y > 0:
-                tetrimino.y -= 1
-                if is_place_tetrimino:
-                    place_tetrimino(tetrimino)
-                is_place_tetrimino = True
-                
+            tetrimino.y -= 1
+            
+            if is_place_tetrimino:
+                place_tetrimino(tetrimino)
+            is_place_tetrimino = True
+            
+            if begin_game:
+                tetrimino = temp_after_tetrimino
+                begin_game = False
+            else:
                 tetrimino = after_tetrimino
                 
+            if not begin_game:
                 position_after_tetrimino = random.choice(tetrimino_bag)
-                after_tetrimino = Tetrimino(SHAPES[position_after_tetrimino], COLORS[position_after_tetrimino])
-                random_rotate = random.choice([0, 1, 2, 3])
-                for i in range(random_rotate):
-                    after_tetrimino.rotate()
-                after_tetrimino.set_y(default_y(after_tetrimino))
+                
+            after_tetrimino = Tetrimino(SHAPES[position_after_tetrimino], COLORS[position_after_tetrimino])
+            random_rotate = random.choice([0, 1, 2, 3])
+            for i in range(random_rotate):
+                after_tetrimino.rotate()
+            after_tetrimino.set_y(default_y(after_tetrimino))
                 
             if top_grid >= ROWS:
                 game_over = True
@@ -310,7 +333,7 @@ while running:
 
     # print(f"top: {top_grid}")
     delete_lines()
-    print(tetrimino.y + len(tetrimino.shape))
+    # print(tetrimino.y + len(tetrimino.shape))
     
     top_grid = draw_grid()
     
