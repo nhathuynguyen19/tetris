@@ -5,12 +5,12 @@ A Tetris Clone made using [pygame](https://www.bing.com/ck/a?!&&p=74e1266fc3ffab
 ## Setup (in Windows):
 ---
 1. Install [Python 3](https://www.python.org/download/releases/).
-2. install Pygame:
+2. Install Pygame:
 ```
 pip install pygame
 ```
 3. Run `main.py` to run the game.
-4. control: 
+4. Control: 
   - Use <kbd>&uarr;</kbd> or <kbd>w</kbd> to rotate tetrimino, 
   - Use <kbd>&darr;</kbd> or <kbd>s</kbd> to quick place,
   - Use <kbd>&larr;</kbd> or <kbd>a</kbd> to moving left,
