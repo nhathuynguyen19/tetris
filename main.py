@@ -20,7 +20,11 @@ def draw_grid():
         is_count_top = True
         for x in range(COLUMNS - 1, -1, -1):
             color_down = down_color(grid[y][x])
-            pygame.draw.rect(screen, grid[y][x], (BLOCK_SIZE * x, BLOCK_SIZE * y, BLOCK_SIZE, BLOCK_SIZE))
+            if grid[y][x] == BLACK:
+                pygame.draw.rect(screen, (20, 20, 20), (BLOCK_SIZE * x, BLOCK_SIZE * y, BLOCK_SIZE, BLOCK_SIZE))
+            else:
+                pygame.draw.rect(screen, grid[y][x], (BLOCK_SIZE * x, BLOCK_SIZE * y, BLOCK_SIZE, BLOCK_SIZE))
+                
             pygame.draw.rect(screen, color_down, (BLOCK_SIZE * x, BLOCK_SIZE * y, BLOCK_SIZE, BLOCK_SIZE), 1)
             if grid[y][x] != (0, 0, 0):
                 if is_count_top:

@@ -18,4 +18,4 @@ pip install pygame
 
 ## Demo
 ---
-![screenshot](assets/images/screenshots/screenshot_1.png)
+![screenshot](assets/images/screenshot_1.png)
