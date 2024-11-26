@@ -35,4 +35,5 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
+    icon=['C:\\Users\\huyth\\OneDrive\\OneDrive\\Code\\My projects\\Tetris\\assets\\images\\icon.ico'],
 )

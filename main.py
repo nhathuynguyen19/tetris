@@ -8,7 +8,7 @@ pygame.init()
 font_home_video = os.path.join(os.getcwd(), 'assets', 'fonts', 'HomeVideo-BLG6G.ttf')
 font_home_video_bold = os.path.join(os.getcwd(), 'assets', 'fonts', 'HomeVideoBold-R90Dv.ttf')
 best_score_path = os.path.join(os.getcwd(), 'assets', 'data', 'best_score.txt')
-logo_path = os.path.join(os.getcwd(), 'assets', 'images', 'logo.png')
+logo_path = os.path.join(os.getcwd(), 'assets', 'images', 'logo.ico')
 
 # font
 font1 = pygame.font.Font(font_home_video, 12)
@@ -263,7 +263,6 @@ while running:
                 # update grid
                 if is_place_tetrimino:
                     place_tetrimino(tetrimino)
-                    delete_lines()
                     
                 # update grid condition
                 is_place_tetrimino = True
@@ -288,6 +287,9 @@ while running:
                 if top_grid >= ROWS:
                     game_over = True
                     is_place_tetrimino = False
+                    
+    # delete line
+    delete_lines()
 
     #draw game scene
     top_grid = draw_grid()
