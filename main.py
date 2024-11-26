@@ -7,7 +7,7 @@ pygame.init()
 # path
 font_home_video = os.path.join(os.getcwd(), 'assets', 'fonts', 'HomeVideo-BLG6G.ttf')
 font_home_video_bold = os.path.join(os.getcwd(), 'assets', 'fonts', 'HomeVideoBold-R90Dv.ttf')
-high_score_path = os.path.join(os.getcwd(), 'assets', 'data', 'high_score.txt')
+best_score_path = os.path.join(os.getcwd(), 'assets', 'data', 'best_score.txt')
 logo_path = os.path.join(os.getcwd(), 'assets', 'images', 'logo.png')
 
 # font
@@ -139,14 +139,14 @@ get_after_tetrimino = False
 is_place_tetrimino = False
 game_over = False
 begin_game = True
-high_score = 0
+best_score = 0
 
 # score file data
-if not os.path.exists(high_score_path):
-    with open(high_score_path, 'w') as file:
+if not os.path.exists(best_score_path):
+    with open(best_score_path, 'w') as file:
         file.write("0")
-with open(high_score_path, 'r') as file:
-    high_score = int(file.read())  
+with open(best_score_path, 'r') as file:
+    best_score = int(file.read())  
 
 while running:
     for event in pygame.event.get():
@@ -212,8 +212,8 @@ while running:
     # print(f"level: {level_game}, score: {score}, lines_delete: {lines_delete}")
     text_score = font1.render(f"Score: {score}", True, WHITE)
     text_level = font1.render(f"Level: {level_game}", True, WHITE)
-    text_high_score = font1.render("High Score:", True, WHITE)
-    text_high_score_number = font1.render(f"{high_score}", True, WHITE)
+    text_best_score = font1.render("Best Score:", True, WHITE)
+    text_best_score_number = font1.render(f"{best_score}", True, WHITE)
     
     if tetrimino_bag and position_after_tetrimino in tetrimino_bag:
         tetrimino_bag.remove(position_after_tetrimino)
@@ -242,18 +242,18 @@ while running:
     draw_tetrimino_game_table(tetrimino_display_table_after)
     screen.blit(text_score, (COLUMNS * BLOCK_SIZE + 20, 6 * BLOCK_SIZE))
     screen.blit(text_level, (COLUMNS * BLOCK_SIZE + 20, 7 * BLOCK_SIZE))
-    screen.blit(text_high_score, (COLUMNS * BLOCK_SIZE + 20, 9 * BLOCK_SIZE))
-    screen.blit(text_high_score_number, (COLUMNS * BLOCK_SIZE + 20, 10 * BLOCK_SIZE))
+    screen.blit(text_best_score, (COLUMNS * BLOCK_SIZE + 20, 9 * BLOCK_SIZE))
+    screen.blit(text_best_score_number, (COLUMNS * BLOCK_SIZE + 20, 10 * BLOCK_SIZE))
     # print(position_after_tetrimino + 1)
     
     # each frame
     if game_time % (22 - level_game*2) == 0:
         
         # update high score
-        if score > high_score:
-            high_score = score
-            with open(high_score_path, "w") as file:
-                file.write(str(high_score))
+        if score > best_score:
+            best_score = score
+            with open(best_score_path, "w") as file:
+                file.write(str(best_score))
         
         if not game_over:
             tetrimino.y += 1
