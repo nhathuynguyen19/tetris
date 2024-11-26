@@ -11,10 +11,10 @@ pip install pygame
 ```
 3. Run `main.py` to run the game.
 4. control: 
-- Use <kbd>&uarr;</kbd> or <kbd>w</kbd> to rotate tetrimino, 
-- Use <kbd>&darr;</kbd> or <kbd>s</kbd> to quick place,
-- Use <kbd>&larr;</kbd> or <kbd>a</kbd> to moving left,
-- Use <kbd>&rarr;</kbd> or <kbd>d</kbd> to moving right,
+  - Use <kbd>&uarr;</kbd> or <kbd>w</kbd> to rotate tetrimino, 
+  - Use <kbd>&darr;</kbd> or <kbd>s</kbd> to quick place,
+  - Use <kbd>&larr;</kbd> or <kbd>a</kbd> to moving left,
+  - Use <kbd>&rarr;</kbd> or <kbd>d</kbd> to moving right,
 
 ## Demo
 ---
