@@ -8,6 +8,7 @@ font1 = pygame.font.Font(font_home_video, 12)
 
 font_home_video_bold = os.path.join(os.getcwd(), 'assets', 'fonts', 'HomeVideoBold-R90Dv.ttf')
 font2 = pygame.font.Font(font_home_video_bold, 30)
+
 GAME_WIDTH = 200
 GAME_HEIGHT = 400
 BLOCK_SIZE = 20
@@ -26,45 +27,17 @@ BLACK = (0, 0, 0)
 GRAY = (192, 192, 192)
 
 COLORS = [
-    LIGHT_BLUE,
-    YELLOW,
-    PURPLE,
-    GREEN,
-    RED,
-    BLUE,
-    ORANGE
+    LIGHT_BLUE, YELLOW, PURPLE, GREEN, RED, BLUE, ORANGE
 ] 
 
 SHAPES = [
-    [
-        [1, 1, 1, 1]
-    ],
-    [
-        [1, 1], 
-        [1, 1]
-    ],
-    [
-        [1, 1, 1],
-        [0, 1, 0]
-    ],
-    [
-        [0, 1 ,1],
-        [1, 1, 0]
-    ],
-    [
-        [1, 1, 0],
-        [0, 1, 1]
-    ],
-    [
-        [1, 0],
-        [1, 0],
-        [1, 1]
-    ],
-    [
-        [0, 1],
-        [0, 1],
-        [1, 1]
-    ]
+    [[1, 1, 1, 1]],
+    [[1, 1], [1, 1]],
+    [[1, 1, 1], [0, 1, 0]],
+    [[0, 1 ,1], [1, 1, 0]],
+    [[1, 1, 0], [0, 1, 1]],
+    [[1, 0], [1, 0], [1, 1]],
+    [[0, 1], [0, 1], [1, 1]]
 ]
 
 class Tetrimino():
@@ -367,3 +340,4 @@ while running:
     pygame.draw.rect(screen, BLACK, (0, 0, COLUMNS * BLOCK_SIZE, ROWS * BLOCK_SIZE))
     game_time += 1
     clock.tick(60)
+pygame.quit()
