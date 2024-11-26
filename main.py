@@ -8,6 +8,7 @@ pygame.init()
 font_home_video = os.path.join(os.getcwd(), 'assets', 'fonts', 'HomeVideo-BLG6G.ttf')
 font_home_video_bold = os.path.join(os.getcwd(), 'assets', 'fonts', 'HomeVideoBold-R90Dv.ttf')
 high_score_path = os.path.join(os.getcwd(), 'assets', 'data', 'high_score.txt')
+logo_path = os.path.join(os.getcwd(), 'assets', 'images', 'logo.png')
 
 # font
 font1 = pygame.font.Font(font_home_video, 12)
@@ -101,6 +102,9 @@ def default_y(tetrimino):
     return 0 - len(tetrimino.shape)
 
 screen = pygame.display.set_mode((GAME_WIDTH + BLOCK_SIZE * 6, GAME_HEIGHT))
+pygame.display.set_caption("Tetris")
+icon_logo = pygame.image.load(logo_path)
+pygame.display.set_icon(icon_logo)
 clock = pygame.time.Clock()
 running = True
 grid = [[(0, 0, 0) for _ in range(COLUMNS)] for _ in range(ROWS)]
