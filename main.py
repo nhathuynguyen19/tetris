@@ -50,24 +50,7 @@ def delete_lines():
             break
 
 def down_color(color):
-    r, g, b = color
-    temp = 50
-    down_index = temp
-    for i in range(r):
-        if r > 0 and down_index > 0:
-            r -= 1
-            down_index -= 1
-    down_index = temp
-    for i in range(g):
-        if g > 0 and down_index > 0:
-            g -= 1
-            down_index -= 1
-    down_index = temp
-    for i in range(r):
-        if b > 0 and down_index > 0:
-            b -= 1
-            down_index -= 1
-    return (r, g, b)
+    return tuple(max(0, c - 50) for c in color)
             
 def draw_tetrimino(tetrimino):
     for y, row in enumerate(tetrimino.shape):
@@ -284,13 +267,13 @@ while running:
                 after_tetrimino.set_y(default_y(after_tetrimino))
                 
                 
-                # delete line
-                delete_lines()
+    # delete line
+    delete_lines()
                 
-                # check game over
-                if top_grid >= ROWS:
-                    game_over = True
-                    is_place_tetrimino = False
+    # check game over
+    if top_grid >= ROWS:
+        game_over = True
+        is_place_tetrimino = False
 
     #draw game scene
     top_grid = draw_grid()
