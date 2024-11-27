@@ -30,3 +30,6 @@ class Tetrimino():
                 if cell == 1:
                     if self.y + y >= 0 and self.y + y <= ROWS and self.x + x >= 0 and self.x + x <= COLUMNS:
                         grid[self.y + y][self.x + x] = self.color
+    
+    def default_y(self):
+        return 0 - len(self.shape)

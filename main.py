@@ -1,6 +1,8 @@
 import pygame, random, os
 from modules import Tetrimino
 from config.constants import *
+from modules.utils import downcolor
+from modules import GameGrid
 
 pygame.init()
 
@@ -13,62 +15,22 @@ logo_path = os.path.join(os.getcwd(), 'assets', 'images', 'logo.ico')
 # font
 font1 = pygame.font.Font(font_home_video, 12)
 font2 = pygame.font.Font(font_home_video_bold, 30)
-
-def draw_grid():
-    temp = 0
-    for y in range(ROWS - 1, -1, -1):
-        is_count_top = True
-        for x in range(COLUMNS - 1, -1, -1):
-            color_down = down_color(grid[y][x])
-            if grid[y][x] == BLACK:
-                pygame.draw.rect(screen, (20, 20, 20), (BLOCK_SIZE * x, BLOCK_SIZE * y, BLOCK_SIZE, BLOCK_SIZE))
-            else:
-                pygame.draw.rect(screen, grid[y][x], (BLOCK_SIZE * x, BLOCK_SIZE * y, BLOCK_SIZE, BLOCK_SIZE))
-                
-            pygame.draw.rect(screen, color_down, (BLOCK_SIZE * x, BLOCK_SIZE * y, BLOCK_SIZE, BLOCK_SIZE), 1)
-            if grid[y][x] != (0, 0, 0):
-                if is_count_top:
-                    temp += 1
-                    is_count_top = False
-    top_grid = temp
-    return top_grid
-
-def delete_lines():
-    global grid, score, level_game, lines_delete
-    for y in range(len(grid) - 1, -1, -1):
-        full_line = True
-        for x in range(COLUMNS):
-            if grid[y][x] == (0, 0, 0):
-                full_line = False
-                break
-        if full_line:
-            del grid[y]
-            grid.insert(0, [(0, 0, 0) for _ in range(COLUMNS)])
-            score += 10
-            lines_delete += 1
-            break
-
-def down_color(color):
-    return tuple(max(0, c - 50) for c in color)
             
 def draw_tetrimino(tetrimino):
     for y, row in enumerate(tetrimino.shape):
         for x, cell in enumerate(row):
-            if cell == 1 and not tetrimino.check_collision(grid): 
-                color_down = down_color(tetrimino.color)
-                pygame.draw.rect(screen, tetrimino.color, ((tetrimino.x + x) * BLOCK_SIZE, (tetrimino.y + y) * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE))
-                pygame.draw.rect(screen, color_down, ((tetrimino.x + x) * BLOCK_SIZE, (tetrimino.y + y) * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE), 1)
+                if cell == 1 and not tetrimino.check_collision(game_grid.grid): 
+                    color_down = downcolor(tetrimino.color)
+                    pygame.draw.rect(screen, tetrimino.color, ((tetrimino.x + x) * BLOCK_SIZE, (tetrimino.y + y) * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE))
+                    pygame.draw.rect(screen, color_down, ((tetrimino.x + x) * BLOCK_SIZE, (tetrimino.y + y) * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE), 1)
 
 def draw_tetrimino_game_table(tetrimino):
     for y, row in enumerate(tetrimino.shape):
         for x, cell in enumerate(row):
             if cell == 1:
-                color_down = down_color(tetrimino.color)
+                color_down = downcolor(tetrimino.color)
                 pygame.draw.rect(screen, tetrimino.color, ((COLUMNS + x + 3 - len(row)/2) * BLOCK_SIZE, ((3 + y - len(tetrimino.shape)/2) * BLOCK_SIZE), BLOCK_SIZE, BLOCK_SIZE))
                 pygame.draw.rect(screen, color_down, ((COLUMNS + x + 3 - len(row)/2) * BLOCK_SIZE, ((3 + y - len(tetrimino.shape)/2) * BLOCK_SIZE), BLOCK_SIZE, BLOCK_SIZE), 1)
-
-def default_y(tetrimino):
-    return 0 - len(tetrimino.shape)
 
 screen = pygame.display.set_mode((GAME_WIDTH + BLOCK_SIZE * 6, GAME_HEIGHT))
 pygame.display.set_caption("Tetris")
@@ -76,8 +38,7 @@ icon_logo = pygame.image.load(logo_path)
 pygame.display.set_icon(icon_logo)
 clock = pygame.time.Clock()
 running = True
-grid = [[(0, 0, 0) for _ in range(COLUMNS)] for _ in range(ROWS)]
-
+game_grid = GameGrid(ROWS, COLUMNS)
 tetrimino_bag = [0, 1, 2, 3, 4, 5, 6]
 current_position_tetrimino = random.choice(tetrimino_bag)
 
@@ -85,7 +46,7 @@ tetrimino = Tetrimino(SHAPES[current_position_tetrimino], COLORS[current_positio
 random_rotate = random.choice([0, 1, 2, 3])
 for i in range(random_rotate):
     tetrimino.rotate()
-tetrimino.set_y(default_y(tetrimino))
+tetrimino.set_y(tetrimino.default_y())
 after_tetrimino = tetrimino
 
 position_after_tetrimino = current_position_tetrimino
@@ -121,23 +82,23 @@ while running:
         if event.type == pygame.KEYDOWN and not game_over:
             if event.key == pygame.K_w or event.key == pygame.K_UP:
                 tetrimino.rotate()
-                if tetrimino.check_collision(grid):
+                if tetrimino.check_collision(game_grid.grid):
                     for i in range(3):
                         tetrimino.rotate()
             if event.key == pygame.K_s or event.key == pygame.K_DOWN:
                 tetrimino.y += 1
                 is_pressed = True
-                if tetrimino.check_collision(grid):
+                if tetrimino.check_collision(game_grid.grid):
                     tetrimino.y -= 1
             if event.key == pygame.K_a or event.key == pygame.K_LEFT:
                 tetrimino.x -= 1
                 is_pressed = True
-                if tetrimino.check_collision(grid):
+                if tetrimino.check_collision(game_grid.grid):
                     tetrimino.x += 1
             if event.key == pygame.K_d or event.key == pygame.K_RIGHT:
                 tetrimino.x += 1
                 is_pressed = True
-                if tetrimino.check_collision(grid):
+                if tetrimino.check_collision(game_grid.grid):
                     tetrimino.x -= 1
     
     
@@ -149,21 +110,21 @@ while running:
             if is_pressed:
                 tetrimino.y -= 1
                 is_pressed = False
-            if tetrimino.check_collision(grid):
+            if tetrimino.check_collision(game_grid.grid):
                 tetrimino.y -= 1
         if keys[pygame.K_a] or keys[pygame.K_LEFT]:
             tetrimino.x -= 1
             if is_pressed:
                 tetrimino.x += 1
                 is_pressed = False
-            if tetrimino.check_collision(grid):
+            if tetrimino.check_collision(game_grid.grid):
                 tetrimino.x += 1
         if keys[pygame.K_d] or keys[pygame.K_RIGHT]:
             tetrimino.x += 1
             if is_pressed:
                 tetrimino.x -= 1
                 is_pressed = False
-            if tetrimino.check_collision(grid):
+            if tetrimino.check_collision(game_grid.grid):
                 tetrimino.x -= 1
         
         last_move_time = current_time
@@ -223,12 +184,12 @@ while running:
         
         if not game_over:
             tetrimino.y += 1
-            if tetrimino.check_collision(grid) and not game_over:
+            if tetrimino.check_collision(game_grid.grid) and not game_over:
                 tetrimino.y -= 1
                 
                 # update grid
                 if is_place_tetrimino:
-                    tetrimino.place_tetrimino(grid)
+                    tetrimino.place_tetrimino(game_grid.grid)
                     
                 # update grid condition
                 is_place_tetrimino = True
@@ -247,11 +208,11 @@ while running:
                 random_rotate = random.choice([0, 1, 2, 3])
                 for i in range(random_rotate):
                     after_tetrimino.rotate()
-                after_tetrimino.set_y(default_y(after_tetrimino))
+                after_tetrimino.set_y(after_tetrimino.default_y())
                 
                 
     # delete line
-    delete_lines()
+    game_grid.delete_lines(score, level_game, lines_delete)
                 
     # check game over
     if top_grid >= ROWS:
@@ -259,7 +220,7 @@ while running:
         is_place_tetrimino = False
 
     #draw game scene
-    top_grid = draw_grid()
+    top_grid = game_grid.draw_grid(screen)
     if not game_over:
         draw_tetrimino(tetrimino)
     
