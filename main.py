@@ -67,13 +67,6 @@ def draw_tetrimino_game_table(tetrimino):
                 pygame.draw.rect(screen, tetrimino.color, ((COLUMNS + x + 3 - len(row)/2) * BLOCK_SIZE, ((3 + y - len(tetrimino.shape)/2) * BLOCK_SIZE), BLOCK_SIZE, BLOCK_SIZE))
                 pygame.draw.rect(screen, color_down, ((COLUMNS + x + 3 - len(row)/2) * BLOCK_SIZE, ((3 + y - len(tetrimino.shape)/2) * BLOCK_SIZE), BLOCK_SIZE, BLOCK_SIZE), 1)
 
-def place_tetrimino(tetrimino):
-    for y, row in enumerate(tetrimino.shape):
-        for x, cell in enumerate(row):
-            if cell == 1:
-                if tetrimino.y + y >= 0 and tetrimino.y + y <= ROWS and tetrimino.x + x >= 0 and tetrimino.x + x <= COLUMNS:
-                    grid[tetrimino.y + y][tetrimino.x + x] = tetrimino.color
-
 def default_y(tetrimino):
     return 0 - len(tetrimino.shape)
 
@@ -235,7 +228,7 @@ while running:
                 
                 # update grid
                 if is_place_tetrimino:
-                    place_tetrimino(tetrimino)
+                    tetrimino.place_tetrimino(grid)
                     
                 # update grid condition
                 is_place_tetrimino = True

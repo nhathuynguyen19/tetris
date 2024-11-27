@@ -23,3 +23,10 @@ class Tetrimino():
                     if grid[y + self.y][x + self.x] != (0, 0, 0) and y + self.y >= 0:
                         return True
         return False
+    
+    def place_tetrimino(self, grid):
+        for y, row in enumerate(self.shape):
+            for x, cell in enumerate(row):
+                if cell == 1:
+                    if self.y + y >= 0 and self.y + y <= ROWS and self.x + x >= 0 and self.x + x <= COLUMNS:
+                        grid[self.y + y][self.x + x] = self.color
