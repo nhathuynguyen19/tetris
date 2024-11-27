@@ -283,13 +283,14 @@ while running:
                     after_tetrimino.rotate()
                 after_tetrimino.set_y(default_y(after_tetrimino))
                 
+                
+                # delete line
+                delete_lines()
+                
                 # check game over
                 if top_grid >= ROWS:
                     game_over = True
                     is_place_tetrimino = False
-                    
-    # delete line
-    delete_lines()
 
     #draw game scene
     top_grid = draw_grid()
