@@ -201,7 +201,8 @@ while running:
     if tetrimino_bag and position_after_tetrimino in tetrimino_bag:
         tetrimino_bag.remove(position_after_tetrimino)
     elif not tetrimino_bag:
-        tetrimino_bag = [0, 1, 2, 3, 4, 5, 6]
+        tetrimino_bag = list(range(7))
+        random.shuffle(tetrimino_bag)
         
     # print(tetrimino_bag)
     
