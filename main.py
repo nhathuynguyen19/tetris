@@ -46,7 +46,6 @@ def delete_lines():
             grid.insert(0, [(0, 0, 0) for _ in range(COLUMNS)])
             score += 10
             lines_delete += 1
-            # print(f"level: {level_game}, score: {score}")
             break
 
 def down_color(color):
@@ -55,7 +54,7 @@ def down_color(color):
 def draw_tetrimino(tetrimino):
     for y, row in enumerate(tetrimino.shape):
         for x, cell in enumerate(row):
-            if cell == 1 and not check_collision(tetrimino): 
+            if cell == 1 and not tetrimino.check_collision(grid): 
                 color_down = down_color(tetrimino.color)
                 pygame.draw.rect(screen, tetrimino.color, ((tetrimino.x + x) * BLOCK_SIZE, (tetrimino.y + y) * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE))
                 pygame.draw.rect(screen, color_down, ((tetrimino.x + x) * BLOCK_SIZE, (tetrimino.y + y) * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE), 1)
@@ -74,16 +73,6 @@ def place_tetrimino(tetrimino):
             if cell == 1:
                 if tetrimino.y + y >= 0 and tetrimino.y + y <= ROWS and tetrimino.x + x >= 0 and tetrimino.x + x <= COLUMNS:
                     grid[tetrimino.y + y][tetrimino.x + x] = tetrimino.color
-                
-def check_collision(tetrimino):
-    for y, row in enumerate(tetrimino.shape):
-        for x, cell in enumerate(row):
-            if cell:
-                if x + tetrimino.x < 0 or x + tetrimino.x >= COLUMNS or y + tetrimino.y >= ROWS:
-                    return True
-                if grid[y + tetrimino.y][x + tetrimino.x] != (0, 0, 0) and y + tetrimino.y >= 0:
-                    return True
-    return False
 
 def default_y(tetrimino):
     return 0 - len(tetrimino.shape)
@@ -139,23 +128,23 @@ while running:
         if event.type == pygame.KEYDOWN and not game_over:
             if event.key == pygame.K_w or event.key == pygame.K_UP:
                 tetrimino.rotate()
-                if check_collision(tetrimino):
+                if tetrimino.check_collision(grid):
                     for i in range(3):
                         tetrimino.rotate()
             if event.key == pygame.K_s or event.key == pygame.K_DOWN:
                 tetrimino.y += 1
                 is_pressed = True
-                if check_collision(tetrimino):
+                if tetrimino.check_collision(grid):
                     tetrimino.y -= 1
             if event.key == pygame.K_a or event.key == pygame.K_LEFT:
                 tetrimino.x -= 1
                 is_pressed = True
-                if check_collision(tetrimino):
+                if tetrimino.check_collision(grid):
                     tetrimino.x += 1
             if event.key == pygame.K_d or event.key == pygame.K_RIGHT:
                 tetrimino.x += 1
                 is_pressed = True
-                if check_collision(tetrimino):
+                if tetrimino.check_collision(grid):
                     tetrimino.x -= 1
     
     
@@ -167,21 +156,21 @@ while running:
             if is_pressed:
                 tetrimino.y -= 1
                 is_pressed = False
-            if check_collision(tetrimino):
+            if tetrimino.check_collision(grid):
                 tetrimino.y -= 1
         if keys[pygame.K_a] or keys[pygame.K_LEFT]:
             tetrimino.x -= 1
             if is_pressed:
                 tetrimino.x += 1
                 is_pressed = False
-            if check_collision(tetrimino):
+            if tetrimino.check_collision(grid):
                 tetrimino.x += 1
         if keys[pygame.K_d] or keys[pygame.K_RIGHT]:
             tetrimino.x += 1
             if is_pressed:
                 tetrimino.x -= 1
                 is_pressed = False
-            if check_collision(tetrimino):
+            if tetrimino.check_collision(grid):
                 tetrimino.x -= 1
         
         last_move_time = current_time
@@ -241,7 +230,7 @@ while running:
         
         if not game_over:
             tetrimino.y += 1
-            if check_collision(tetrimino) and not game_over:
+            if tetrimino.check_collision(grid) and not game_over:
                 tetrimino.y -= 1
                 
                 # update grid
