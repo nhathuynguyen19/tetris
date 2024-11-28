@@ -1,3 +1,5 @@
+import os
+
 GAME_WIDTH = 200
 GAME_HEIGHT = 400
 BLOCK_SIZE = 20
@@ -28,3 +30,6 @@ SHAPES = [
     [[1, 0], [1, 0], [1, 1]],
     [[0, 1], [0, 1], [1, 1]]
 ]       
+
+
+ASSETS_PATH = os.path.join(os.getcwd(), 'assets')

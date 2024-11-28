@@ -6,9 +6,6 @@ class Tetrimino():
         self.color = color
         self.x = (COLUMNS // 2) - (len(self.shape[0]) // 2)
         self.y = 0
-
-    def set_y(self, y):
-        self.y = y
         
     def rotate(self):
         transposed = list(zip(*self.shape))
