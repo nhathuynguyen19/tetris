@@ -212,7 +212,7 @@ while running:
                 
                 
     # delete line
-    game_grid.delete_lines(score, level_game, lines_delete)
+    score, lines_delete = game_grid.delete_lines(score, lines_delete)
                 
     # check game over
     if top_grid >= ROWS:

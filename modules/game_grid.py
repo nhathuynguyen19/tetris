@@ -8,7 +8,7 @@ class GameGrid:
         self.columns = columns
         self.grid = [[(0, 0, 0) for _ in range(columns)] for _ in range(rows)]
         
-    def delete_lines(self, score, level_game, lines_delete):
+    def delete_lines(self, score, lines_delete):
         for y in range(self.rows - 1, -1, -1):
             full_line = True
             for x in range(COLUMNS):
@@ -21,6 +21,7 @@ class GameGrid:
                 score += 10
                 lines_delete += 1
                 break
+        return score, lines_delete
     
     def draw_grid(self, screen):
         temp = 0
