@@ -31,50 +31,9 @@ def draw_tetrimino_game_table(tetrimino):
                 color_down = downcolor(tetrimino.color)
                 pygame.draw.rect(screen, tetrimino.color, ((COLUMNS + x + 3 - len(row)/2) * BLOCK_SIZE, ((3 + y - len(tetrimino.shape)/2) * BLOCK_SIZE), BLOCK_SIZE, BLOCK_SIZE))
                 pygame.draw.rect(screen, color_down, ((COLUMNS + x + 3 - len(row)/2) * BLOCK_SIZE, ((3 + y - len(tetrimino.shape)/2) * BLOCK_SIZE), BLOCK_SIZE, BLOCK_SIZE), 1)
-
-screen = pygame.display.set_mode((GAME_WIDTH + BLOCK_SIZE * 6, GAME_HEIGHT))
-pygame.display.set_caption("Tetris")
-icon_logo = pygame.image.load(logo_path)
-pygame.display.set_icon(icon_logo)
-clock = pygame.time.Clock()
-running = True
-game_grid = GameGrid(ROWS, COLUMNS)
-tetrimino_bag = [0, 1, 2, 3, 4, 5, 6]
-current_position_tetrimino = random.choice(tetrimino_bag)
-
-tetrimino = Tetrimino(SHAPES[current_position_tetrimino], COLORS[current_position_tetrimino])
-random_rotate = random.choice([0, 1, 2, 3])
-for i in range(random_rotate):
-    tetrimino.rotate()
-tetrimino.set_y(tetrimino.default_y())
-after_tetrimino = tetrimino
-
-position_after_tetrimino = current_position_tetrimino
-
-game_time = 0
-move_delay = 40
-last_move_time = 0
-is_pressed = False
-top_grid = 0
-score = 0
-score_to_level_up = 100
-level_game = 1
-lines_delete = 0
-table_draw = True
-get_after_tetrimino = False
-is_place_tetrimino = False
-game_over = False
-begin_game = True
-best_score = 0
-
-# score file data
-if not os.path.exists(best_score_path):
-    with open(best_score_path, 'w') as file:
-        file.write("0")
-with open(best_score_path, 'r') as file:
-    best_score = int(file.read())  
-
-while running:
+            
+def handle_events():
+    global is_pressed, running, last_move_time
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -128,35 +87,92 @@ while running:
                 tetrimino.x -= 1
         
         last_move_time = current_time
-          
-    
-    # print(f"x: {tetrimino.x}, y: {tetrimino.y}")
-    #level game
+
+def level_up():
+    global level_game, lines_delete
     if score % score_to_level_up == 0 and level_game < 10 and lines_delete >= 10:
         level_game += 1
         lines_delete = 0
-    # print(f"level: {level_game}, score: {score}, lines_delete: {lines_delete}")
+
+def text_display():
+    global text_score, text_level, text_best_score, text_best_score_number
     text_score = font1.render(f"Score: {score}", True, WHITE)
     text_level = font1.render(f"Level: {level_game}", True, WHITE)
     text_best_score = font1.render("Best Score:", True, WHITE)
     text_best_score_number = font1.render(f"{best_score}", True, WHITE)
     
+    screen.blit(text_score, (COLUMNS * BLOCK_SIZE + 20, 7 * BLOCK_SIZE))
+    screen.blit(text_level, (COLUMNS * BLOCK_SIZE + 20, 8 * BLOCK_SIZE))
+    screen.blit(text_best_score, (COLUMNS * BLOCK_SIZE + 20, 10 * BLOCK_SIZE))
+    screen.blit(text_best_score_number, (COLUMNS * BLOCK_SIZE + 20, 11 * BLOCK_SIZE))
+  
+def check_tetrimino_bag():
+    global tetrimino_bag
     if tetrimino_bag and position_after_tetrimino in tetrimino_bag:
         tetrimino_bag.remove(position_after_tetrimino)
     elif not tetrimino_bag:
         tetrimino_bag = list(range(7))
         random.shuffle(tetrimino_bag)
         
-    # print(tetrimino_bag)
+def draw_table_game():
+    global screen, table_game
+    table_game = pygame.Rect(COLUMNS * BLOCK_SIZE, 0, 6 * BLOCK_SIZE, ROWS * BLOCK_SIZE)
+    screen.fill((20, 20, 20), table_game)
+    pygame.draw.rect(screen, WHITE, (COLUMNS * BLOCK_SIZE, 0, 6 * BLOCK_SIZE, ROWS * BLOCK_SIZE), 2)
+    
+screen = pygame.display.set_mode((GAME_WIDTH + BLOCK_SIZE * 6, GAME_HEIGHT))
+pygame.display.set_caption("Tetris")
+icon_logo = pygame.image.load(logo_path)
+pygame.display.set_icon(icon_logo)
+clock = pygame.time.Clock()
+running = True
+game_grid = GameGrid(ROWS, COLUMNS)
+tetrimino_bag = [0, 1, 2, 3, 4, 5, 6]
+current_position_tetrimino = random.choice(tetrimino_bag)
+
+tetrimino = Tetrimino(SHAPES[current_position_tetrimino], COLORS[current_position_tetrimino])
+random_rotate = random.choice([0, 1, 2, 3])
+for i in range(random_rotate):
+    tetrimino.rotate()
+tetrimino.set_y(tetrimino.default_y())
+after_tetrimino = tetrimino
+
+position_after_tetrimino = current_position_tetrimino
+
+game_time = 0
+move_delay = 40
+last_move_time = 0
+is_pressed = False
+top_grid = 0
+score = 0
+score_to_level_up = 100
+level_game = 1
+lines_delete = 0
+table_draw = True
+get_after_tetrimino = False
+is_place_tetrimino = False
+game_over = False
+begin_game = True
+best_score = 0
+table_game = None
+
+# score file data
+if not os.path.exists(best_score_path):
+    with open(best_score_path, 'w') as file:
+        file.write("0")
+with open(best_score_path, 'r') as file:
+    best_score = int(file.read())  
+
+while running:
+    handle_events()
+    level_up()
+    check_tetrimino_bag()
+    draw_table_game()
     
     if begin_game:
         temp_after_tetrimino = after_tetrimino
         position_after_tetrimino = random.choice(tetrimino_bag)
     
-    table_game = pygame.Rect(COLUMNS * BLOCK_SIZE, 0, 6 * BLOCK_SIZE, ROWS * BLOCK_SIZE)
-    screen.fill((20, 20, 20), table_game)
-    pygame.draw.rect(screen, WHITE, (COLUMNS * BLOCK_SIZE, 0, 6 * BLOCK_SIZE, ROWS * BLOCK_SIZE), 2)
-        
     if begin_game:
         tetrimino_display_table_after = temp_after_tetrimino
     else:
@@ -167,11 +183,7 @@ while running:
     for i in range(random_rotate):
         tetrimino_display_table_after.rotate()
     draw_tetrimino_game_table(tetrimino_display_table_after)
-    screen.blit(text_score, (COLUMNS * BLOCK_SIZE + 20, 7 * BLOCK_SIZE))
-    screen.blit(text_level, (COLUMNS * BLOCK_SIZE + 20, 8 * BLOCK_SIZE))
-    screen.blit(text_best_score, (COLUMNS * BLOCK_SIZE + 20, 10 * BLOCK_SIZE))
-    screen.blit(text_best_score_number, (COLUMNS * BLOCK_SIZE + 20, 11 * BLOCK_SIZE))
-    # print(position_after_tetrimino + 1)
+    text_display()
     
     # each frame
     if game_time % (22 - level_game*2) == 0:
