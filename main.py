@@ -137,7 +137,7 @@ pygame.display.set_caption("Tetris")
 icon_logo = pygame.image.load(logo_path)
 pygame.display.set_icon(icon_logo)
 clock = pygame.time.Clock()
-running = True
+running = False
 game_grid = GameGrid(ROWS, COLUMNS)
 tetrimino_bag = [0, 1, 2, 3, 4, 5, 6]
 current_position_tetrimino = random.choice(tetrimino_bag)
