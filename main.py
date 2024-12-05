@@ -37,7 +37,7 @@ def draw_tetrimino_game_table(tetrimino):
                 pygame.draw.rect(screen, color_down, ((COLUMNS + x + 3 - len(row)/2) * BLOCK_SIZE, ((3 + y - len(tetrimino.shape)/2) * BLOCK_SIZE), BLOCK_SIZE, BLOCK_SIZE), 1)
             
 def process_events():
-    global is_pressed, running, last_move_time
+    global is_pressed, running, last_move_time, paused_game
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -63,6 +63,8 @@ def process_events():
                 is_pressed = True
                 if tetrimino.check_collision(game_grid.grid):
                     tetrimino.x -= 1
+            if event.key == pygame.K_p:
+                paused_game = not paused_game
     
     
     current_time = pygame.time.get_ticks()
@@ -164,6 +166,7 @@ game_over = False
 begin_game = True
 best_score = 0
 table_game = None
+paused_game = False
 
 # score file data
 if not os.path.exists(best_score_file_path):
@@ -194,7 +197,8 @@ while running:
         update_best_score()
         
         if not game_over:
-            tetrimino.y += 1
+            if not paused_game:
+                tetrimino.y += 1
             if tetrimino.check_collision(game_grid.grid) and not game_over:
                 tetrimino.y -= 1
                 
