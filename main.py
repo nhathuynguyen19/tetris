@@ -4,7 +4,6 @@ from config.constants import *
 from modules.utils import downcolor
 
 pygame.init()
-
 # path
 font_regular_path = os.path.join(ASSETS_PATH, 'fonts', 'HomeVideo-BLG6G.ttf')
 font_bold_path = os.path.join(ASSETS_PATH, 'fonts', 'HomeVideoBold-R90Dv.ttf')
