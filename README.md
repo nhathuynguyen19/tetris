@@ -15,7 +15,7 @@ pip install pygame
   - Use <kbd>&darr;</kbd> or <kbd>s</kbd> to quick place,
   - Use <kbd>&larr;</kbd> or <kbd>a</kbd> to moving left,
   - Use <kbd>&rarr;</kbd> or <kbd>d</kbd> to moving right,
-  - Use <kbd>&/login;</kbd> or <kbd>d</kbd> to moving right
+  - Use <kbd>/login</kbd> or <kbd>d</kbd> to moving right
 
 ## Demo
 ---
