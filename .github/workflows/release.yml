@@ -50,7 +50,7 @@ jobs:
 
       - name: Create zip archive
         run: |
-          Compress-Archive -Path ${PROJECT_NAME} -DestinationPath ${env:PROJECT_NAME}-windows.zip -Force
+          Compress-Archive -Path "${PROJECT_NAME}" -DestinationPath "${env:PROJECT_NAME}-windows.zip" -Force
           Remove-Item ${env:PROJECT_NAME}-windows.zip
           Get-ChildItem -Path * -Exclude .git, .github | Compress-Archive -DestinationPath ${env:PROJECT_NAME}-windows.zip
           Get-Item ${env:PROJECT_NAME}-windows.zip
