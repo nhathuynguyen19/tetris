@@ -23,7 +23,7 @@ jobs:
           
       - name: Create tarball
         run: |
-          tar --exclude=.git --exclude=.github -czvf ${PROJECT_NAME}-linux-macos.tar.gz . --ignore-failed-read
+          tar --exclude=.git --exclude=.github -czvf ${PROJECT_NAME}-linux-macos.tar.gz ${PROJECT_NAME} --ignore-failed-read
           ls -la ${PROJECT_NAME}-linux-macos.tar.gz
 
       - name: Upload Release Assets to GitHub
