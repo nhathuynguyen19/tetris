@@ -48,12 +48,26 @@ jobs:
         with:
           python-version: '3.8'
 
+      - name: Debug - Kiểm tra thư mục hiện tại
+        run: |
+          Get-Location
+          Get-ChildItem -Path . -Name
+
       - name: Create zip archive
         run: |
-          Compress-Archive -Path "$env:PROJECT_NAME" -DestinationPath "${env:PROJECT_NAME}-windows.zip" -Force
-          Remove-Item ${env:PROJECT_NAME}-windows.zip
-          Get-ChildItem -Path * -Exclude .git, .github | Compress-Archive -DestinationPath ${env:PROJECT_NAME}-windows.zip
-          Get-Item ${env:PROJECT_NAME}-windows.zip
+          $zipPath = "${{ env.PROJECT_NAME }}-windows.zip"
+
+          # Xóa file cũ nếu tồn tại
+          if (Test-Path $zipPath) {
+            Remove-Item $zipPath -Force
+          }
+
+          # Nén toàn bộ project vào file ZIP
+          Get-ChildItem -Path . -Exclude .git, .github | Compress-Archive -DestinationPath $zipPath
+
+          # Kiểm tra kết quả nén
+          Get-Item $zipPath
+        shell: pwsh
 
       - name: Upload Release Assets to GitHub
         uses: softprops/action-gh-release@v1
