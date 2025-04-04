@@ -17,6 +17,7 @@ python app.py
 
 ```sh
 python -m venv venv
+Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
 venv\Scripts\activate
 pip install -r requirements.txt
 python app.py
