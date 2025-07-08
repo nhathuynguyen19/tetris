@@ -23,7 +23,6 @@ pip install -r requirements.txt
 python app.py
 ```
 
-3. Run `main.py` to run the game.
 4. Control: 
   - Use <kbd>&uarr;</kbd> or <kbd>w</kbd> to rotate tetrimino, 
   - Use <kbd>&darr;</kbd> or <kbd>s</kbd> to quick place,
