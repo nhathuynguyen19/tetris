@@ -4,7 +4,7 @@ A Tetris Clone made using [pygame](https://www.bing.com/ck/a?!&&p=74e1266fc3ffab
 
 - **Download release**, **extract**, open **cmd** (Windows) or **Terminal** (macOS/Linux) in the project folder and run
 
-## Linux (Arch), macOS
+## Linux, macOS
 
 ```sh
 python -m venv venv
